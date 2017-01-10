@@ -1,8 +1,10 @@
-//#include <cmath>
+#include <cmath>
 #include <cstdio>
 #include <vector>
 #include <iostream>
 #include <algorithm>
+
+#include "ft_imp.h"
 using namespace std;
 
 // Set matrix to max size.
