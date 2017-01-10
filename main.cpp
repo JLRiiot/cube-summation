@@ -7,9 +7,7 @@
 #include "ft_imp.h"
 using namespace std;
 
-// Set matrix to max size.
-long matrix[101][101][101];
-
+/*
 long long update(long long x, long long y, long long z, long long val){
     matrix[x][y][z] = val;
     return val;
@@ -35,7 +33,7 @@ long long query(long long x1, long long y1, long long z1, long long x2, long lon
 
     return sum;
 }
-
+*/
 void processCase(int T)
 {
     // Store test case variables:
@@ -47,9 +45,6 @@ void processCase(int T)
 
     long long x1, y1, z1, x2, y2, z2, val;
 
-    //printf("Test case: %d\n", T);
-    //printf("N: %lld, M: %lld\n", n, m);
-
     memset(matrix, 0, sizeof(matrix));
 
     while (m){
@@ -57,13 +52,18 @@ void processCase(int T)
         if(!strcmp(cmd, "UPDATE")){
             // Execute upate command.
             scanf(" %lld %lld %lld %lld", &x1, &y1, &z1, &val);
-            update(x1, y1, z1, val);
+            //update(x1, y1, z1, val);
+            //printf("UPDATE\n");
+            fenwick_update(x1, y1, z1, val - fenwick_get(x1, y1, z1, x1, y1, z1, n), n);
             //printf("%s %d %d %d %d\n", cmd, x1, y1, z1, val);
         }
         if(!strcmp(cmd, "QUERY")){
             // Execute query calculation.
+            long long result;
             scanf("%lld %lld %lld %lld %lld %lld", &x1, &y1, &z1, &x2, &y2, &z2);
-            long long result = query(x1, y1, z1, x2, y2, z2);
+            //result = query(x1, y1, z1, x2, y2, z2);
+            //printf("QUERY\n");
+            result = fenwick_get(x1, y1, z1, x2, y2, z2, n);
             printf("%lld\n", result);
             //printf("%s %d %d %d %d %d %d\n", cmd, x1, y1, z1, x2, y2, z2);
         }
