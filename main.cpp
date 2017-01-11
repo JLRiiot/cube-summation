@@ -3,37 +3,67 @@
 #include <vector>
 #include <iostream>
 #include <algorithm>
+#include <string.h> 
 
-#include "ft_imp.h"
 using namespace std;
-
 /*
-long long update(long long x, long long y, long long z, long long val){
-    matrix[x][y][z] = val;
-    return val;
-}
+* Fenwick tree implementation for 3D matrix
+*/
 
-long long query(long long x1, long long y1, long long z1, long long x2, long long y2, long long z2){
+long long matrix[101][101][101];
+// Implementing less significant bit function
+#define LSB(i) ((i) & (-i))
+
+long long fenwick_sum(long x, long y, long z, long n){
     long long sum = 0;
-    long long x, y, z;
-
-    z = z1;
-    while(z<=z2){
-        y = y1;
-        while(y<=y2){
-            x = x1;
-            while(x<=x2){
-                sum += matrix[x][y][z];
-                x+=1;
+    long y1, x1;
+    while(z>0){
+        x1 = x;
+        while(x1>0){
+            y1 = y;
+            while(y1>0){
+                sum += matrix[x1][y1][z];
+                //printf("sum >> %ld, %ld, %ld   |   %lld\n", x1, y1, z, sum);
+                y1 -= LSB(y1);
             }
-            y+=1;
+            x1 -= LSB(x1);
         }
-        z+=1;
+        z -= LSB(z);
     }
-
+    //printf("sum >> %ld, %ld, %ld   |   %lld\n", x, y, z, sum);
     return sum;
 }
-*/
+
+long long fenwick_get(long x, long y, long z, long x1, long y1, long z1, long n){
+    long long v1 = 0, v2 = 0;
+
+    v1 = fenwick_sum(x1, y1, z1, n) -  fenwick_sum(x-1, y1, z1, n) 
+        - fenwick_sum(x1, y-1, z1, n) + fenwick_sum(x-1, y-1, z1, n);
+    v2 = fenwick_sum(x1, y1, z-1, n) - fenwick_sum(x-1, y1, z-1, n) 
+        - fenwick_sum(x1, y-1, z-1, n) + fenwick_sum(x-1, y-1, z-1, n);
+
+    return v1 - v2;
+}
+
+void fenwick_update(long x, long y, long z, long long val, long n){
+    long x1, y1;
+    while(z<=n){
+        x1 = x;
+        while(x1<=n){
+            y1 = y;
+            while(y1<=n){
+                //printf("%ld, %ld, %ld  |  %lld\n", x1, y1, z, matrix[x1][y1][z]);
+                matrix[x1][y1][z] += val;
+                //printf("%ld, %ld, %ld  |  %lld\n", x1, y1, z, matrix[x1][y1][z]);
+
+                y1 += LSB(y1);
+            }
+            x1 += LSB(x1);
+        }
+        z += LSB(z);
+    }
+}
+
 void processCase(int T)
 {
     // Store test case variables:
